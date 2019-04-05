@@ -15,6 +15,20 @@ map_answer_total = {
 sender_list = []
 
 '''
+Called to reset all data structures for use on new multiple choice question
+'''
+def reset():
+    map_id_answer = {}
+    map_answer_total = {
+        'A': 0,
+        'B': 0,
+        'C': 0,
+        'D': 0,
+        'E': 0
+    }
+    sender_list = []
+
+'''
 Takes in serial input from arduino
 Returns: (<answer>, <iclicker_id>) or None if bad message
 '''
