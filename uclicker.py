@@ -16,12 +16,11 @@ map_answer_total = {
 # queue which stores most recent iclicker ids
 sender_list = []
 
-'''
-Called to reset all data structures for use on new multiple choice question
-'''
-
 
 def reset():
+    '''
+    Called to reset all data structures for use on new multiple choice question
+    '''
     map_id_answer = {}
     map_answer_total = {
         'A': 0,
@@ -33,13 +32,11 @@ def reset():
     sender_list = []
 
 
-'''
-Takes in serial input from arduino
-Returns: (<answer>, <iclicker_id>) or None if bad message
-'''
-
-
 def parse_message(serial_msg):
+    '''
+    Takes in serial input from arduino
+    Returns: (<answer>, <iclicker_id>) or None if bad message
+    '''
     string_msg = serial_msg.decode('utf-8').strip()
     if string_msg != '':
         # parse out the string message
@@ -51,26 +48,22 @@ def parse_message(serial_msg):
     return None
 
 
-'''
-if limit is not provided the function will return all available ids
-Returns <limit> number of ids ordered by most recent submission
-'''
-
-
 def get_ids(limit=None):
+    '''
+    if limit is not provided the function will return all available ids
+    Returns <limit> number of ids ordered by most recent submission
+    '''
     length = len(sender_list)
     if limit is None:
         limit = length
     return sender_list[length - limit:length]
 
 
-'''
-Takes in an iclicker_id and moves it to top of sender list
-to maintain most recently active iclickers
-'''
-
-
 def register_sender(iclicker_id):
+    '''
+    Takes in an iclicker_id and moves it to top of sender list
+    to maintain most recently active iclickers
+    '''
     try:  # try to remove if present
         sender_list.remove(iclicker_id)
     except:
@@ -100,6 +93,22 @@ def execute_cmd(cmdstring):
         reset()
     elif tokens[0] == 'ans':
         ans()
+    elif tokens[0] == 'ids':
+        if len(tokens) > 1:
+            if tokens[1].isdigit():
+                get_ids(int(tokens[1]))
+            else:
+                print(ERR)
+        else:
+            get_ids()
+    elif tokens[0] == 'freq':
+        pass
+    elif tokens[0] == 'send':
+        pass
+    elif tokens[0] == 'startdos':
+        pass
+    elif tokens[0] == 'stopdos':
+        pass
 
 
 next_cmd = None
