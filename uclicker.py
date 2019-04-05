@@ -117,7 +117,6 @@ next_cmd = None
 def keyboard_listener():
     global next_cmd
     next_cmd = input('> ')
-    tokens = cmdstring.split()
 
 
 ser = serial.Serial('/dev/tty.usbmodem14141', 115200)  # establish connection
@@ -138,9 +137,9 @@ while True:
         register_sender(iclicker_id)
 
         # prints out all the data
-        print()
-        print("active clickers:", get_ids())
-        print("answers:", map_answer_total)
+        # print()
+        # print("active clickers:", get_ids())
+        # print("answers:", map_answer_total)
 
     # Check keyboard
     if next_cmd is not None:
