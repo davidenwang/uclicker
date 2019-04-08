@@ -191,7 +191,7 @@ class Session():
         Waits for keyboard input.
         Should be in its own thread.
         '''
-        self.next_cmd = input('> ')
+        self.next_cmd = input('(uclicker)> ')
 
     @staticmethod
     def parse_message(serial_msg):
