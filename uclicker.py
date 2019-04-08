@@ -2,6 +2,7 @@ from time import sleep
 import serial
 import threading
 import sys
+import argparse
 
 
 class Question():
@@ -190,7 +191,7 @@ class Session():
         Waits for keyboard input.
         Should be in its own thread.
         '''
-        self.next_cmd = input('>>> ')
+        self.next_cmd = input('> ')
 
     @staticmethod
     def parse_message(serial_msg):
@@ -210,5 +211,10 @@ class Session():
 
 
 if __name__ == '__main__':
-    session = Session()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-n', '--no-transceiver',
+                        action='store_false', dest='connect')
+    args = parser.parse_args()
+
+    session = Session(args.connect)
     session.loop()
