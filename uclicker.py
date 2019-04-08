@@ -83,23 +83,34 @@ class Session():
                 'send', 'startdos', 'stopdos', 'quit']
     ERR = 'Invalid command'
 
-    def __init__(self):
+    def __init__(self, connect=True):
+        '''
+        Initializes the session and
+        connects to the transceiver if connect is True.
+        (Setting connect to False is for testing purposes)
+        '''
+
+        self.connect = connect
         # Information captured for each iClicker question
         self.questions = [Question()]
         # Recently captured keyboard input
         self.next_cmd = None
-        # Establish connection to Arduino transceiver
-        # self.ser = serial.Serial('/dev/tty.usbmodem14141', 115200)
+
         # Start listening to keyboard
         threading.Thread(target=self.keyboard_listener).start()
+
+        if self.connect:
+            # Establish connection to Arduino transceiver
+            self.ser = serial.Serial('/dev/tty.usbmodem14141', 115200)
 
     def loop(self):
         '''
         Main loop
         '''
         while True:
-            # self.check_iclicker()
             self.check_keyboard()
+            if self.connect:
+                self.check_iclicker()
             sleep(.1)
 
     def check_iclicker(self):
@@ -179,7 +190,7 @@ class Session():
         Waits for keyboard input.
         Should be in its own thread.
         '''
-        self.next_cmd = input('> ')
+        self.next_cmd = input('>>> ')
 
     @staticmethod
     def parse_message(serial_msg):
