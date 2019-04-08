@@ -16,6 +16,9 @@ map_answer_total = {
 # queue which stores most recent iclicker ids
 sender_list = []
 
+# Global variable for saving recent keyboard input
+next_cmd = None
+
 
 def reset():
     '''
@@ -119,9 +122,6 @@ def execute_cmd(cmdstring):
         pass
 
 
-next_cmd = None
-
-
 def keyboard_listener():
     '''
     Waits for keyboard input.
@@ -131,14 +131,16 @@ def keyboard_listener():
     next_cmd = input('> ')
 
 
-ser = serial.Serial('/dev/tty.usbmodem14141', 115200)  # establish connection
-threading.Thread(target=keyboard_listener).start()
-while True:
-    # Check iClicker
+def check_iclicker():
+    '''
+    Processes incoming iClicker messages
+    if they exist.
+    '''
     iclicker_message = parse_message(ser.readline())
     if iclicker_message is not None:
         answer, iclicker_id = iclicker_message
-        if iclicker_id in map_id_answer:  # remove previous answer
+        # remove previous answer
+        if iclicker_id in map_id_answer:
             prev_answer = map_id_answer[iclicker_id]
             map_answer_total[prev_answer] -= 1
         # add to total of current answer
@@ -148,10 +150,26 @@ while True:
         # add the iclicker to top of sender list
         register_sender(iclicker_id)
 
-    # Check keyboard
+
+def check_keyboard():
+    '''
+    Processes keyboard input
+    if any has been captured.
+    '''
+    global next_cmd
     if next_cmd is not None:
         execute_cmd(next_cmd)
         next_cmd = None
+        # Restart keyboard listener
         threading.Thread(target=keyboard_listener).start()
 
+
+# Establish connection to Arduino transceiver
+ser = serial.Serial('/dev/tty.usbmodem14141', 115200)
+# Start listening to keyboard
+threading.Thread(target=keyboard_listener).start()
+# Main loop
+while True:
+    check_iclicker()
+    check_keyboard()
     sleep(.1)
