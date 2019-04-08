@@ -73,11 +73,19 @@ def register_sender(iclicker_id):
 
 
 def ans():
+    '''
+    Prints a summary of iClicker answers
+    collected so far.
+    '''
     for k in map_answer_total:
         print(k, map_answer_total[k])
 
 
 def execute_cmd(cmdstring):
+    '''
+    Parses commands from interactive prompt
+    and calls the corresponding function.
+    '''
     COMMANDS = ['freq', 'ans', 'ids', 'reset',
                 'send', 'startdos', 'stopdos', 'quit']
     ERR = 'Invalid command'
@@ -115,6 +123,10 @@ next_cmd = None
 
 
 def keyboard_listener():
+    '''
+    Waits for keyboard input.
+    Should be in its own thread.
+    '''
     global next_cmd
     next_cmd = input('> ')
 
@@ -135,11 +147,6 @@ while True:
 
         # add the iclicker to top of sender list
         register_sender(iclicker_id)
-
-        # prints out all the data
-        # print()
-        # print("active clickers:", get_ids())
-        # print("answers:", map_answer_total)
 
     # Check keyboard
     if next_cmd is not None:
