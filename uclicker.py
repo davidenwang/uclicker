@@ -89,7 +89,7 @@ class Session():
         # Recently captured keyboard input
         self.next_cmd = None
         # Establish connection to Arduino transceiver
-        self.ser = serial.Serial('/dev/tty.usbmodem14141', 115200)
+        # self.ser = serial.Serial('/dev/tty.usbmodem14141', 115200)
         # Start listening to keyboard
         threading.Thread(target=self.keyboard_listener).start()
 
@@ -98,7 +98,7 @@ class Session():
         Main loop
         '''
         while True:
-            self.check_iclicker()
+            # self.check_iclicker()
             self.check_keyboard()
             sleep(.1)
 
@@ -196,3 +196,8 @@ class Session():
             except:
                 return None
         return None
+
+
+if __name__ == '__main__':
+    session = Session()
+    session.loop()
