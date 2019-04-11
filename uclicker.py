@@ -102,10 +102,11 @@ class Session():
             self.ser = None
         else:
             self.ser = serial.Serial(port, 115200)
-            threading.Thread(target=self.iclicker_listener).start()
+            threading.Thread(target=self.iclicker_listener,
+                             daemon=True).start()
 
         # Start listening to keyboard
-        threading.Thread(target=self.keyboard_listener).start()
+        threading.Thread(target=self.keyboard_listener, daemon=True).start()
 
     def loop(self):
         '''
@@ -126,7 +127,8 @@ class Session():
             self.questions[-1].save_message(iclicker_message)
             # Restart iClicker listener
             self.next_msg = None
-            threading.Thread(target=self.iclicker_listener).start()
+            threading.Thread(target=self.iclicker_listener,
+                             daemon=True).start()
 
     def check_keyboard(self):
         '''
@@ -137,7 +139,8 @@ class Session():
             self.execute_cmd(self.next_cmd)
             # Restart keyboard listener
             self.next_cmd = None
-            threading.Thread(target=self.keyboard_listener).start()
+            threading.Thread(target=self.keyboard_listener,
+                             daemon=True).start()
 
     def execute_cmd(self, cmdstring):
         '''
@@ -205,7 +208,8 @@ class Session():
         Waits for iClicker messages.
         Should be in its own thread.
         '''
-        self.next_msg = self.parse_message(self.ser.readline())
+        while self.next_msg is None:
+            self.next_msg = self.parse_message(self.ser.readline())
 
     @staticmethod
     def parse_message(serial_msg):
