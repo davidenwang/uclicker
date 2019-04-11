@@ -72,7 +72,7 @@ class Question():
         Prints a summary of iClicker answers
         collected so far.
         '''
-        for k in self.map_answer_total:
+        for k in sorted(self.map_answer_total):
             print(k, self.map_answer_total[k])
 
 
