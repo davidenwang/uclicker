@@ -95,12 +95,16 @@ class Session():
         self.questions = [Question()]
         # Recently captured keyboard input
         self.next_cmd = None
+        # Recently captured iClicker message
+        self.next_msg = None
 
         # Start listening to keyboard
         threading.Thread(target=self.keyboard_listener).start()
 
         # Establish connection to Arduino transceiver
         self.ser = serial.Serial(port, 115200) if port else None
+        if self.ser is not None:
+            threading.Thread(target=self.iclicker_listener).start()
 
     def loop(self):
         '''
@@ -108,8 +112,7 @@ class Session():
         '''
         while True:
             self.check_keyboard()
-            if self.ser:
-                self.check_iclicker()
+            self.check_iclicker()
             sleep(.1)
 
     def check_iclicker(self):
@@ -117,8 +120,12 @@ class Session():
         Checks for an incoming iClicker message
         and passes it to the current Question
         '''
-        iclicker_message = self.parse_message(self.ser.readline())
-        self.questions[-1].save_message(iclicker_message)
+        if self.next_msg is not None:
+            iclicker_message = self.next_msg
+            self.questions[-1].save_message(iclicker_message)
+            # Restart iClicker listener
+            self.next_msg = None
+            threading.Thread(target=self.iclicker_listener).start()
 
     def check_keyboard(self):
         '''
@@ -127,8 +134,8 @@ class Session():
         '''
         if self.next_cmd is not None:
             self.execute_cmd(self.next_cmd)
-            self.next_cmd = None
             # Restart keyboard listener
+            self.next_cmd = None
             threading.Thread(target=self.keyboard_listener).start()
 
     def execute_cmd(self, cmdstring):
@@ -190,6 +197,13 @@ class Session():
         Should be in its own thread.
         '''
         self.next_cmd = input('(uclicker)> ')
+
+    def iclicker_listener(self):
+        '''
+        Waits for iClicker messages.
+        Should be in its own thread.
+        '''
+        self.next_msg = self.parse_message(self.ser.readline())
 
     @staticmethod
     def parse_message(serial_msg):
