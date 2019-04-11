@@ -96,13 +96,16 @@ class Session():
         # Recently captured iClicker message
         self.next_msg = None
 
+        # Establish connection to Arduino transceiver
+        if port is None:
+            print('No port given, running in test mode')
+            self.ser = None
+        else:
+            self.ser = serial.Serial(port, 115200)
+            threading.Thread(target=self.iclicker_listener).start()
+
         # Start listening to keyboard
         threading.Thread(target=self.keyboard_listener).start()
-
-        # Establish connection to Arduino transceiver
-        self.ser = serial.Serial(port, 115200) if port else None
-        if self.ser is not None:
-            threading.Thread(target=self.iclicker_listener).start()
 
     def loop(self):
         '''
