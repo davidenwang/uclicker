@@ -228,7 +228,7 @@ class Session():
         where the last byte is an XOR checksum of the first three.
         '''
         def x(i):
-            return (hex(i)[2:]).upper()
+            return (hex(i)[2:]).upper().zfill(2)
 
         b1 = random.randint(0, 255)
         b2 = random.randint(0, 255)
