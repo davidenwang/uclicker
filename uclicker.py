@@ -85,14 +85,12 @@ class Session():
                 'send', 'startdos', 'stopdos', 'quit']
     ERR = 'Invalid command'
 
-    def __init__(self, connect=True):
+    def __init__(self, port):
         '''
         Initializes the session and
-        connects to the transceiver if connect is True.
-        (Setting connect to False is for testing purposes)
+        connects to the transceiver if port is given.
         '''
 
-        self.connect = connect
         # Information captured for each iClicker question
         self.questions = [Question()]
         # Recently captured keyboard input
@@ -101,9 +99,8 @@ class Session():
         # Start listening to keyboard
         threading.Thread(target=self.keyboard_listener).start()
 
-        if self.connect:
-            # Establish connection to Arduino transceiver
-            self.ser = serial.Serial('/dev/ttyACM0', 115200)
+        # Establish connection to Arduino transceiver
+        self.ser = serial.Serial(port, 115200) if port else None
 
     def loop(self):
         '''
@@ -111,7 +108,7 @@ class Session():
         '''
         while True:
             self.check_keyboard()
-            if self.connect:
+            if self.ser:
                 self.check_iclicker()
             sleep(.1)
 
@@ -229,9 +226,8 @@ class Session():
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('-n', '--no-transceiver',
-                        action='store_false', dest='connect')
+    parser.add_argument('-p', '--port')
     args = parser.parse_args()
 
-    session = Session(args.connect)
+    session = Session(args.port)
     session.loop()
