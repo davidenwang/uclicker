@@ -114,7 +114,7 @@ class Session():
         while True:
             self.check_keyboard()
             self.check_iclicker()
-            sleep(.1)
+            sleep(.01)
 
     def check_iclicker(self):
         '''
