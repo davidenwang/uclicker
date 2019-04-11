@@ -81,8 +81,6 @@ class Session():
     Runs a uClicker session
     with interactive prompt
     '''
-    COMMANDS = ['freq', 'ans', 'ids', 'reset',
-                'send', 'startdos', 'stopdos', 'quit']
     ERR = 'Invalid command'
 
     def __init__(self, port):
@@ -144,9 +142,6 @@ class Session():
         and calls the corresponding function.
         '''
         tokens = cmdstring.split()
-        if tokens[0] not in self.COMMANDS:
-            print(self.ERR)
-            return
 
         if tokens[0] == 'quit':
             sys.exit(0)
@@ -170,6 +165,10 @@ class Session():
             pass
         elif tokens[0] == 'stopdos':
             pass
+        elif tokens[0] == 'gen':
+            print(self.generate_id())
+        else:
+            print(self.ERR)
 
     def reset(self):
         '''
