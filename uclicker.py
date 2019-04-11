@@ -3,6 +3,7 @@ import serial
 import threading
 import sys
 import argparse
+import random
 
 
 class Question():
@@ -102,7 +103,7 @@ class Session():
 
         if self.connect:
             # Establish connection to Arduino transceiver
-            self.ser = serial.Serial('/dev/tty.usbmodem14141', 115200)
+            self.ser = serial.Serial('/dev/ttyACM0', 115200)
 
     def loop(self):
         '''
@@ -208,6 +209,22 @@ class Session():
             except:
                 return None
         return None
+
+    @staticmethod
+    def generate_id():
+        '''
+        Generates a random iClicker ID.
+        iClicker IDs are 4 bytes in hexadecimal,
+        where the last byte is an XOR checksum of the first three.
+        '''
+        def x(i):
+            return (hex(i)[2:]).upper()
+
+        b1 = random.randint(0, 255)
+        b2 = random.randint(0, 255)
+        b3 = random.randint(0, 255)
+        b4 = b1 ^ b2 ^ b3
+        return ' '.join([x(i) for i in [b1, b2, b3, b4]])
 
 
 if __name__ == '__main__':
