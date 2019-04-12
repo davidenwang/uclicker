@@ -166,7 +166,7 @@ class Session():
         elif tokens[0] == 'freq':
             pass
         elif tokens[0] == 'send':
-            pass
+            self.send(tokens[1], tokens[2])
         elif tokens[0] == 'startdos':
             pass
         elif tokens[0] == 'stopdos':
@@ -175,6 +175,20 @@ class Session():
             print(self.generate_id())
         else:
             print(self.ERR)
+
+    def send(self, iclicker_id, choice):
+        '''
+        Send choice to base using alias iclicker_id.
+        :param iclicker_id: 8 digit hex string
+        :param choice: letter of choice [A, E] USE CAPITALS!!!
+        :return: nothing
+        '''
+        for x in range(4):
+            fragment = iclicker_id[(2*x):(2*(x+1))]
+            char_representation = chr(int(fragment, 16))
+            self.ser.write('%c' % char_representation)
+        num_choice = ord(choice) - 65
+        self.ser.write('%d' % num_choice)
 
     def reset(self):
         '''
