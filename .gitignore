@@ -1,2 +1,5 @@
 venv/
 .DS_Store
+node_modules/
+/npm/dist/
+/npm/path.txt

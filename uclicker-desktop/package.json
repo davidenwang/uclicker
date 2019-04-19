@@ -1,0 +1,15 @@
+{
+  "name": "uclicker-desktop",
+  "version": "1.0.0",
+  "description": "An Electron interface for uClicker",
+  "main": "main.js",
+  "scripts": {
+    "install-wsl": "npm install && npm uninstall electron && export npm_config_platform=win32 && npm install electron && unset npm_config_platform",
+    "start": "electron ."
+  },
+  "author": "dl-eric",
+  "license": "MIT",
+  "dependencies": {
+    "cleave.js": "^1.4.10"
+  }
+}

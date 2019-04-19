@@ -1,0 +1,10 @@
+.gs_container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+#iclicker_form {
+    color: gray;
+}
