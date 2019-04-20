@@ -12,11 +12,12 @@ function createWindow () {
     height: 600,
     webPreferences: {
       nodeIntegration: true
-    }
+    },
+    title: "uClicker Desktop"
   })
 
   // and load the index.html of the app.
-  mainWindow.loadFile('get-started.html')
+  mainWindow.loadFile('src/templates/index.html')
 
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()

@@ -11,5 +11,8 @@
   "license": "MIT",
   "dependencies": {
     "cleave.js": "^1.4.10"
+  },
+  "devDependencies": {
+    "electron": "^4.1.4"
   }
 }
