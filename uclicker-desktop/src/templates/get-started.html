@@ -1,13 +1,14 @@
-<div class="gs_container">
-    <h1>Let's get started!</h1>
-    <form id="iclicker_form" onSubmit="JavaScript:sendId(event)">
+<template id="get-started">
+    <div class="gs_container page">
+        <h1>Let's get started!</h1>
         <input type="text" placeholder="iClicker ID" id="iclicker-id">
-        <input type="submit">
-    </form>
-</div>
-<script>
-    require('cleave.js')
-</script>
+        <input id="submitClicker" type="submit" class="navigate" data-page="clicker">
+    </div>
+    <script>
+        require('cleave.js');
+        require('../scripts/input.js');
+    </script>
+</template>
 <!-- <script src="renderer.js"></script>
 <script src="cleave.min.js"></script>
 <script src="input.js"></script> -->
