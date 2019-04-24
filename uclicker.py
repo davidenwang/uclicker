@@ -186,9 +186,9 @@ class Session():
         for x in range(4):
             fragment = iclicker_id[(2*x):(2*(x+1))]
             char_representation = chr(int(fragment, 16))
-            self.ser.write('%c' % char_representation)
+            self.ser.write(('%c' % char_representation).encode())
         num_choice = ord(choice) - 65
-        self.ser.write('%d' % num_choice)
+        self.ser.write(('%d' % num_choice).encode())
 
     def reset(self):
         '''
