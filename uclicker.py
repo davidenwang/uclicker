@@ -164,17 +164,38 @@ class Session():
             else:
                 self.ids()
         elif tokens[0] == 'freq':
-            pass
+            self.freq(tokens[1])
         elif tokens[0] == 'send':
             self.send(tokens[1], tokens[2])
         elif tokens[0] == 'startdos':
-            pass
+            self.startdos()
         elif tokens[0] == 'stopdos':
-            pass
+            self.stopdos()
         elif tokens[0] == 'gen':
             print(self.generate_id())
         else:
             print(self.ERR)
+
+    def freq(self, freqchoice):
+        '''
+
+        :param freqchoice: choice of frequencies in 2 capital letters [A-F]
+        :return:
+        '''
+        # action code
+        self.ser.write(chr(98).encode())
+        for x in range(2):
+            self.ser.write(('%c' % freqchoice[x]).encode())
+        for x in range(5):
+            self.ser.write(chr(97).encode())
+
+    def startdos(self):
+        for x in range(8):
+            self.ser.write(chr(99).encode())
+
+    def stopdos(self):
+        for x in range(8):
+            self.ser.write(chr(100).encode())
 
     def send(self, iclicker_id, choice):
         '''
@@ -183,12 +204,19 @@ class Session():
         :param choice: letter of choice [A, E] USE CAPITALS!!!
         :return: nothing
         '''
+        # action code
+        self.ser.write(chr(97).encode())
+        # iclicker id
         for x in range(4):
             fragment = iclicker_id[(2*x):(2*(x+1))]
             char_representation = chr(int(fragment, 16))
             self.ser.write(('%c' % char_representation).encode())
         num_choice = ord(choice) - 65
+        # answer choice
         self.ser.write(('%d' % num_choice).encode())
+        # fill in the rest of the bytes for 8 byte format
+        for x in range(2):
+            self.ser.write(chr(97).encode())
 
     def reset(self):
         '''
