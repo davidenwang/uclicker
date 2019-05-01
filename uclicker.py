@@ -6,6 +6,11 @@ import argparse
 import random
 
 
+class DummySerial():
+    def write(self, x):
+        pass
+
+
 class Question():
     '''
     Holds all captured information
@@ -99,7 +104,7 @@ class Session():
         # Establish connection to Arduino transceiver
         if port is None:
             print('No port given, running in test mode')
-            self.ser = None
+            self.ser = DummySerial()
         else:
             self.ser = serial.Serial(port, 115200)
             threading.Thread(target=self.iclicker_listener,
