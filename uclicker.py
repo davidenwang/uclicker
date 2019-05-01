@@ -101,6 +101,8 @@ class Session():
         self.next_cmd = None
         # Recently captured iClicker message
         self.next_msg = None
+        # Mutex for questions data
+        self.questions_mutex = threading.Lock()
 
         # Establish connection to Arduino transceiver
         if port is None:
@@ -130,7 +132,11 @@ class Session():
         '''
         if self.next_msg is not None:
             iclicker_message = self.next_msg
+
+            self.questions_mutex.acquire()
             self.questions[-1].save_message(iclicker_message)
+            self.questions_mutex.release()
+
             # Restart iClicker listener
             self.next_msg = None
             threading.Thread(target=self.iclicker_listener,
@@ -241,19 +247,26 @@ class Session():
         '''
         Move on to a new Question
         '''
+        self.questions_mutex.acquire()
         self.questions.append(Question())
+        self.questions_mutex.release()
 
     def ans(self):
         '''
         Prints the captured answers for the current question
         '''
+        self.questions_mutex.acquire()
         self.questions[-1].ans()
+        self.questions_mutex.release()
 
     def ids(self, limit=None):
         '''
         Prints the captured iClicker IDs for the current question
         '''
+        self.questions_mutex.acquire()
         ids = self.questions[-1].get_ids(limit)
+        self.questions_mutex.release()
+
         for id in ids:
             print(id)
 
