@@ -154,14 +154,14 @@ class Session():
         '''
         tokens = cmdstring.split()
 
-        if tokens[0] == 'quit':
+        if tokens[0] == 'quit' or tokens[0] == 'exit':
             sys.exit(0)
         elif tokens[0] == 'reset':
             self.reset()
         elif tokens[0] == 'ans':
             self.ans()
         elif tokens[0] == 'ids':
-            if len(tokens) > 1:
+            if len(tokens) >= 2:
                 if tokens[1].isdigit():
                     self.ids(int(tokens[1]))
                 else:
@@ -169,9 +169,15 @@ class Session():
             else:
                 self.ids()
         elif tokens[0] == 'freq':
-            self.freq(tokens[1])
+            if len(tokens) >= 2 and self.validate_freq(tokens[1].upper()):
+                self.freq(tokens[1].upper())
+            else:
+                print(self.ERR)
         elif tokens[0] == 'send':
-            self.send(tokens[1], tokens[2])
+            if len(tokens) >= 3:
+                self.send(tokens[1], tokens[2])
+            else:
+                print(self.ERR)
         elif tokens[0] == 'startdos':
             self.startdos()
         elif tokens[0] == 'stopdos':
@@ -183,6 +189,7 @@ class Session():
 
     def freq(self, freqchoice):
         '''
+        Changes the iClicker frequency to attack on.
 
         :param freqchoice: choice of frequencies in 2 capital letters [A-F]
         :return:
@@ -195,10 +202,16 @@ class Session():
             self.ser.write(chr(97).encode())
 
     def startdos(self):
+        '''
+        Starts a DOS attack by spamming iClicker messages.
+        '''
         for x in range(8):
             self.ser.write(chr(99).encode())
 
     def stopdos(self):
+        '''
+        Halts a DOS attack started earlier.
+        '''
         for x in range(8):
             self.ser.write(chr(100).encode())
 
@@ -289,6 +302,20 @@ class Session():
         b3 = random.randint(0, 255)
         b4 = b1 ^ b2 ^ b3
         return ' '.join([x(i) for i in [b1, b2, b3, b4]])
+
+    @staticmethod
+    def validate_freq(f):
+        '''
+        Validates that a given frequency
+        is 2 letters of [A-F]
+        '''
+        if len(f) != 2:
+            return False
+        if f[0] < 'A' or f[0] > 'F':
+            return False
+        if f[1] < 'A' or f[1] > 'F':
+            return False
+        return True
 
 
 if __name__ == '__main__':
