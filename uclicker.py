@@ -174,8 +174,8 @@ class Session():
             else:
                 print(self.ERR)
         elif tokens[0] == 'send':
-            if len(tokens) >= 3:
-                self.send(tokens[1], tokens[2])
+            if len(tokens) >= 3 and self.validate_send(tokens[1], tokens[2].upper()):
+                self.send(tokens[1], tokens[2].upper())
             else:
                 print(self.ERR)
         elif tokens[0] == 'startdos':
@@ -319,6 +319,30 @@ class Session():
             return False
         if f[1] < 'A' or f[1] > 'F':
             return False
+        return True
+
+    @staticmethod
+    def validate_send(id, choice):
+        '''
+        Valides the arguments for send
+        '''
+        if len(choice) != 1 or choice < 'A' or choice > 'E':
+            return False
+
+        if len(id) != 8:
+            return False
+
+        id_bytes = []
+        try:
+            for i in range(0, 8, 2):
+                b = int(id[i:i+2], 16)
+                id_bytes.append(b)
+        except ValueError:
+            return False
+
+        if id_bytes[3] != (id_bytes[0] ^ id_bytes[1] ^ id_bytes[2]):
+            return False
+
         return True
 
 
