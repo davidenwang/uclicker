@@ -4,6 +4,7 @@ import threading
 import sys
 import argparse
 import random
+import zerorpc
 
 
 class DummySerial():
@@ -353,3 +354,7 @@ if __name__ == '__main__':
 
     session = Session(args.port)
     session.loop()
+
+    server = zerorpc.Server(session)
+    server.bind('tcp://0.0.0.0:4545')
+    server.run()
