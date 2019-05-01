@@ -261,7 +261,11 @@ class Session():
         Waits for keyboard input.
         Should be in its own thread.
         '''
-        self.next_cmd = input('(uclicker)> ')
+        try:
+            self.next_cmd = input('(uclicker)> ')
+        except EOFError:
+            print()
+            self.next_cmd = 'quit'
 
     def iclicker_listener(self):
         '''
