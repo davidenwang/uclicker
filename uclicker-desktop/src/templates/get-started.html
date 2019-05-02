@@ -1,8 +1,13 @@
 <template id="get-started">
     <div class="gs_container page">
-        <h1>Let's get started!</h1>
-        <input type="text" placeholder="iClicker ID" id="iclicker-id">
-        <input id="submitClicker" type="submit" class="navigate" data-page="clicker">
+        <h1>uClicker</h1>
+        <div class="gs_card">
+            <h1>Let's get started!</h1>
+            <input type="text" placeholder="iClicker ID" id="iclicker-id">
+            <p>or</p>
+            <div class="button">Generate ID</div>
+            <div id="submitClicker" class="navigate" data-page="clicker">Go <i class="fas fa-arrow-right"></i></div>
+        </div>
     </div>
     <script>
         require('cleave.js');

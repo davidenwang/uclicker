@@ -3,6 +3,12 @@ html, body, .content {
     margin: 0;
 }
 
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #F5F5F5;
+    color: #616161;
+}
+
 .content {
     position: relative;
 }
@@ -30,11 +36,60 @@ html, body, .content {
 
 .gs_container {
     display: flex;
-    justify-content: center;
     align-items: center;
     flex-direction: column;
+    padding-top: 40px;
 }
 
-#iclicker_form {
-    color: gray;
+.gs_card {
+    background-color: white;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.gs_card > h1 {
+    position: relative;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    background-color: #1664c0;
+    color: white;
+    padding: 15px;
+    margin: 0 0 30px 0;
+}
+
+.gs_card > input {
+    border: none;
+    font-size: 24px;
+    font-family: 'Open Sans', sans-serif;
+    text-align: center;
+    border-bottom: 2px solid #e0e0e0;
+    padding: 5px;
+    transition: border 250ms ease-out;
+}
+
+.gs_card > input:focus {
+    border-bottom: 2px solid #1664c0;
+}
+
+.navigate {
+    display: inline-block;
+    align-self: flex-end;
+    padding: 10px;
+    color: #1664c0;
+    font-size: 18px;
+    font-family: 'Open Sans', sans-serif;
+}
+
+#submitClicker {
+    margin-top: 20px;
+}
+
+.button {
+    display: inline-block;
+    border-radius: 20px;
+    padding: 10px;
+    color: white;
+    background-color: #1664c0;
 }
