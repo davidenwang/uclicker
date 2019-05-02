@@ -14,6 +14,10 @@ iClickerEmulator clicker(CSN, IRQ_PIN, digitalPinToInterrupt(IRQ_PIN), IS_RFM69H
 
 RingBufCPP<iClickerPacket, MAX_BUFFERED_PACKETS> recvBuf;
 
+#define MAX_RECVD 500
+
+iClickerAnswerPacket_t recvd[MAX_RECVD];
+uint32_t num_recvd = 0;
 
 // This will flood base station with random answers under random ids
 // Use at your own risk...
@@ -31,25 +35,29 @@ void setup()
 void loop()
 {
     //while iclicker answers are coming in, deal with them
-    iClickerPacket r;
+    iClickerPacket_t r;
     while (recvBuf.pull(&r) && r.type == PACKET_ANSWER){
+        Serial.println("go in");
         handleCapture(r.packet.answerPacket);
     }
     //after that check if the serial channel has any commands
     if (Serial.available() >= 8){
+        Serial.println(Serial.available());
         char c = Serial.read();
 
         switch(c)
         {
             case 'a':
                 send();
+                break;
             case 'b':
                 frequency();
+                break;
             case 'c':
                 ddos();
+                break;
         }
     }
-
     delay(100);
 }
 
@@ -100,12 +108,6 @@ void frequency(){
             else if (second == 'D'){
                 channel = iClickerChannels::AD;
             }
-            else if (second == 'E'){
-                channel = iClickerChannels::AE;
-            }
-            else if(second == 'F'){
-                channel = iClickerChannels::AF;
-            }
             break;
         case 'B':
             if (second == 'A'){
@@ -119,12 +121,6 @@ void frequency(){
             }
             else if (second == 'D'){
                 channel = iClickerChannels::BD;
-            }
-            else if (second == 'E'){
-                channel = iClickerChannels::BE;
-            }
-            else if(second == 'F'){
-                channel = iClickerChannels::BF;
             }
             break;
         case 'C':
@@ -140,12 +136,6 @@ void frequency(){
             else if (second == 'D'){
                 channel = iClickerChannels::CD;
             }
-            else if (second == 'E'){
-                channel = iClickerChannels::CE;
-            }
-            else if(second == 'F'){
-                channel = iClickerChannels::CF;
-            }
             break;
         case 'D':
             if (second == 'A'){
@@ -160,57 +150,11 @@ void frequency(){
             else if (second == 'D'){
                 channel = iClickerChannels::DD;
             }
-            else if (second == 'E'){
-                channel = iClickerChannels::DE;
-            }
-            else if(second == 'F'){
-                channel = iClickerChannels::DF;
-            }
-            break;
-        case 'E':
-            if (second == 'A'){
-                channel = iClickerChannels::EA;
-            }
-            else if (second == 'B'){
-                channel = iClickerChannels::EB;
-            }
-            else if (second == 'C'){
-                channel = iClickerChannels::EC;
-            }
-            else if (second == 'D'){
-                channel = iClickerChannels::ED;
-            }
-            else if (second == 'E'){
-                channel = iClickerChannels::EE;
-            }
-            else if(second == 'F'){
-                channel = iClickerChannels::EF;
-            }
-            break;
-        case 'F':
-            if (second == 'A'){
-                channel = iClickerChannels::FA;
-            }
-            else if (second == 'B'){
-                channel = iClickerChannels::FB;
-            }
-            else if (second == 'C'){
-                channel = iClickerChannels::FC;
-            }
-            else if (second == 'D'){
-                channel = iClickerChannels::FD;
-            }
-            else if (second == 'E'){
-                channel = iClickerChannels::FE;
-            }
-            else if(second == 'F'){
-                channel = iClickerChannels::FF;
-            }
             break;
     }
     clicker.setChannel(channel);
     for (int i = 0; i < 5; i++){
-        Serial.read()
+        Serial.read();
     }
 
 }
@@ -219,12 +163,31 @@ void frequency(){
 void handleCapture(iClickerAnswerPacket answerPacket){
     char tmp[100];
     uint8_t *id = answerPacket.id;
-    char answer = iClickerEmulator::answerChar(answerPacket.answer);
+    char answer = iClickerEmulator::answerChar((iClickerAnswer_t)answerPacket.answer);
+    //char answer = iClickerEmulator::answerChar(answerPacket.answer);
     updateRef(answerPacket);
     snprintf(tmp, sizeof(tmp), "%c:%02X %02X %02X %02X\n", answer, id[0], id[1], id[2], id[3]);
     Serial.println(tmp);
 }
 
+void updateRef(iClickerAnswerPacket_t p)
+{
+  uint32_t i = 0;
+  for (i = 0; i < num_recvd; i++)
+  {
+    if (!memcmp(recvd[i].id, p.id, ICLICKER_ID_LEN))
+    {
+      //update
+      recvd[i] = p;
+      break;
+    }
+  }
+
+  //not found and space
+  if (i == num_recvd && num_recvd < MAX_RECVD) {
+    recvd[num_recvd++] = p;
+  }
+}
 
 void recvPacketHandler(iClickerPacket *recvd)
 {
@@ -239,6 +202,10 @@ void send()
     for (int i = 0; i < 4; i++){
         hexstr[i] = Serial.read();
         id[i] = (uint8_t)hexstr[i];
+//        Serial.println(i);
+//        Serial.println(id[i]);
+//        Serial.println(hexstr[i]);
+//        Serial.println();
     }
     int ans_num = Serial.read();
     iClickerAnswer ans;
@@ -250,11 +217,13 @@ void send()
       ans = ANSWER_C;
     } else if(ans_num == 3){
       ans = ANSWER_D;
-    } else if(ans_num == 4){
+    } else if(ans_num == 33){
       ans = ANSWER_E;
     }
     clicker.submitAnswer(id, ans);
     for (int i = 0; i < 2; i++){
-        Serial.read();
+      Serial.read();
     }
+    Serial.println("we're done");
+    clicker.startPromiscuous(CHANNEL_SEND, recvPacketHandler);
 }
