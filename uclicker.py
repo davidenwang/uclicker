@@ -33,18 +33,18 @@ class Question():
         # queue which stores most recent iclicker ids
         self.sender_list = []
 
-    def register_sender(self, iclicker_id):
+    def register_sender(self, (iclicker_id, ans)):
         '''
         Takes in an iclicker_id and moves it to top of sender list
         to maintain most recently active iclickers
         '''
         # try to remove if present
         try:
-            self.sender_list.remove(iclicker_id)
+            self.sender_list.remove((iclicker_id, ans))
         except:
             pass
         # add iclicker id to top of list
-        self.sender_list.append(iclicker_id)
+        self.sender_list.append((iclicker_id, ans))
 
     def save_message(self, iclicker_message):
         '''
@@ -62,7 +62,7 @@ class Question():
             self.map_id_answer[iclicker_id] = answer
 
             # add the iclicker to top of sender list
-            self.register_sender(iclicker_id)
+            self.register_sender((iclicker_id, answer))
 
     def get_ids(self, limit=None):
         '''
