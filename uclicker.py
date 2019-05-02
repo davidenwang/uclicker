@@ -5,6 +5,7 @@ import sys
 import argparse
 import random
 import zerorpc
+import struct
 
 
 class DummySerial():
@@ -202,25 +203,25 @@ class Session():
         :return:
         '''
         # action code
-        self.ser.write(chr(98).encode())
+        send_str = b''
+        send_str += struct.pack('>B', 98)
         for x in range(2):
-            self.ser.write(('%c' % freqchoice[x]).encode())
+            send_str += struct.pack('>B', ord(freqchoice[x]))
         for x in range(5):
-            self.ser.write(chr(97).encode())
+            send_str += struct.pack('>B', 97)
+        self.ser.write(send_str)
 
     def startdos(self):
         '''
         Starts a DOS attack by spamming iClicker messages.
         '''
-        for x in range(8):
-            self.ser.write(chr(99).encode())
+        self.ser.write('cccccccc'.encode())
 
     def stopdos(self):
         '''
         Halts a DOS attack started earlier.
         '''
-        for x in range(8):
-            self.ser.write(chr(100).encode())
+        self.ser.write('dddddddd'.encode())
 
     def send(self, iclicker_id, choice):
         '''
@@ -229,19 +230,22 @@ class Session():
         :param choice: letter of choice [A, E] USE CAPITALS!!!
         :return: nothing
         '''
+        send_str = b''
         # action code
-        self.ser.write(chr(97).encode())
+        send_str += struct.pack('>B', 97)
+        # self.ser.write(chr(97).encode())
         # iclicker id
         for x in range(4):
             fragment = iclicker_id[(2*x):(2*(x+1))]
-            char_representation = chr(int(fragment, 16))
-            self.ser.write(('%c' % char_representation).encode())
+            char_representation = struct.pack('>B', int(fragment, 16))
+            send_str += char_representation
         num_choice = ord(choice) - 65
         # answer choice
-        self.ser.write(('%d' % num_choice).encode())
+        send_str += struct.pack('>B', num_choice)
         # fill in the rest of the bytes for 8 byte format
         for x in range(2):
-            self.ser.write(chr(97).encode())
+            send_str += struct.pack('>B', 97)
+        self.ser.write(send_str)
 
     def reset(self):
         '''

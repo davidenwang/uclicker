@@ -1,1 +1,2 @@
 pyserial==3.4
+zerorpc==0.6.1

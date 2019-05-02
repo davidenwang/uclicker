@@ -37,14 +37,11 @@ void loop()
     //while iclicker answers are coming in, deal with them
     iClickerPacket_t r;
     while (recvBuf.pull(&r) && r.type == PACKET_ANSWER){
-        Serial.println("go in");
         handleCapture(r.packet.answerPacket);
     }
     //after that check if the serial channel has any commands
     if (Serial.available() >= 8){
-        Serial.println(Serial.available());
         char c = Serial.read();
-
         switch(c)
         {
             case 'a':
@@ -68,22 +65,24 @@ void ddos()
         Serial.read();
     }
     while (!shouldExit())
-        clicker.ddos(1000);
+        clicker.ddos(1);
     clicker.startPromiscuous(CHANNEL_SEND, recvPacketHandler);
 }
 
 //checks to see if the user has send a command to stop ddosing
 bool shouldExit()
 {
-    if(Serial.available() >= 8){
-        if(Serial.read() == 'd')
-            for(int i = 0; i < 7; i++){
+    if(Serial.available() >= 8) {
+        if(Serial.read() == 'd') {
+            for(int i = 0; i < 7; i++) {
                 Serial.read();
             }
             return true;
-    }
-    for(int i = 0; i < 7; i++){
+        } else {
+            for(int i = 0; i < 7; i++) {
                 Serial.read();
+            }
+        }
     }
     return false;
 }
@@ -202,10 +201,6 @@ void send()
     for (int i = 0; i < 4; i++){
         hexstr[i] = Serial.read();
         id[i] = (uint8_t)hexstr[i];
-//        Serial.println(i);
-//        Serial.println(id[i]);
-//        Serial.println(hexstr[i]);
-//        Serial.println();
     }
     int ans_num = Serial.read();
     iClickerAnswer ans;
@@ -224,6 +219,6 @@ void send()
     for (int i = 0; i < 2; i++){
       Serial.read();
     }
-    Serial.println("we're done");
+    // go back to reading mode
     clicker.startPromiscuous(CHANNEL_SEND, recvPacketHandler);
 }
