@@ -199,7 +199,7 @@ class Session():
         '''
         Changes the iClicker frequency to attack on.
 
-        :param freqchoice: choice of frequencies in 2 capital letters [A-F]
+        :param freqchoice: choice of frequencies in 2 capital letters [A-D]
         :return:
         '''
         # action code
@@ -329,13 +329,13 @@ class Session():
     def validate_freq(f):
         '''
         Validates that a given frequency
-        is 2 letters of [A-F]
+        is 2 letters of [A-D]
         '''
         if len(f) != 2:
             return False
-        if f[0] < 'A' or f[0] > 'F':
+        if f[0] < 'A' or f[0] > 'D':
             return False
-        if f[1] < 'A' or f[1] > 'F':
+        if f[1] < 'A' or f[1] > 'D':
             return False
         return True
 
