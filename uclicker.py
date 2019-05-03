@@ -374,8 +374,10 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     session = Session(args.port)
-    session.loop()
 
     server = zerorpc.Server(session)
     server.bind('tcp://0.0.0.0:4545')
     server.run()
+
+    session.loop()
+
