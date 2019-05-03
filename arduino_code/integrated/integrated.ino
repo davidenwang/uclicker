@@ -31,7 +31,9 @@ void setup()
     //clicker.dumpRegisters();
 }
 
-
+/*
+ *  Main arduino loop
+ */
 void loop()
 {
     //while iclicker answers are coming in, deal with them
@@ -58,7 +60,11 @@ void loop()
     delay(100);
 }
 
-//start ddosing the base, note that all other functionality is disabled while this is occurring
+/*
+ * Start ddosing the base.
+ *
+ * Note: All other functionality is disabled while this is occuring.
+ */
 void ddos()
 {
     for (int i = 0; i < 7; i++){
@@ -69,7 +75,9 @@ void ddos()
     clicker.startPromiscuous(CHANNEL_SEND, recvPacketHandler);
 }
 
-//checks to see if the user has send a command to stop ddosing
+/*
+ *  Checks to see if the user requested to stop ddosing
+ */
 bool shouldExit()
 {
     if(Serial.available() >= 8) {
@@ -87,7 +95,9 @@ bool shouldExit()
     return false;
 }
 
-//changes the frequency of the channel
+/*
+ *  Change the frequency based on user input
+ */
 void frequency(){
     char first = Serial.read();
     char second = Serial.read();
@@ -158,17 +168,22 @@ void frequency(){
 
 }
 
-//capture packets that other iclickers have sent
+/*
+ *  Capture packets that other iClickers have sent
+ */
 void handleCapture(iClickerAnswerPacket answerPacket){
     char tmp[100];
     uint8_t *id = answerPacket.id;
     char answer = iClickerEmulator::answerChar((iClickerAnswer_t)answerPacket.answer);
-    //char answer = iClickerEmulator::answerChar(answerPacket.answer);
+    
     updateRef(answerPacket);
     snprintf(tmp, sizeof(tmp), "%c:%02X %02X %02X %02X\n", answer, id[0], id[1], id[2], id[3]);
     Serial.println(tmp);
 }
 
+/*
+ * Update reference to iClicker answer packet
+ */
 void updateRef(iClickerAnswerPacket_t p)
 {
   uint32_t i = 0;
@@ -193,11 +208,15 @@ void recvPacketHandler(iClickerPacket *recvd)
     recvBuf.add(*recvd);
 }
 
-//send answer to base under a certain id
+/*
+ *  Send a message to the base under the specified ID
+ */
 void send()
 {
     char hexstr[4];
-    uint8_t id[4];
+    uint8_t id[4];i
+
+    // Read in ID
     for (int i = 0; i < 4; i++){
         hexstr[i] = Serial.read();
         id[i] = (uint8_t)hexstr[i];
