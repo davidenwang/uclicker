@@ -6,6 +6,7 @@ import argparse
 import random
 import zerorpc
 import struct
+import readline
 
 
 class DummySerial():
@@ -33,18 +34,19 @@ class Question():
         # queue which stores most recent iclicker ids
         self.sender_list = []
 
-    def register_sender(self, iclicker_id):
+    def register_sender(self, sender):
         '''
         Takes in an iclicker_id and moves it to top of sender list
         to maintain most recently active iclickers
         '''
+        (iclicker_id, ans) = sender
         # try to remove if present
         try:
-            self.sender_list.remove(iclicker_id)
+            self.sender_list.remove((iclicker_id, ans))
         except:
             pass
         # add iclicker id to top of list
-        self.sender_list.append(iclicker_id)
+        self.sender_list.append((iclicker_id, ans))
 
     def save_message(self, iclicker_message):
         '''
@@ -62,7 +64,7 @@ class Question():
             self.map_id_answer[iclicker_id] = answer
 
             # add the iclicker to top of sender list
-            self.register_sender(iclicker_id)
+            self.register_sender((iclicker_id, answer))
 
     def get_ids(self, limit=None):
         '''
@@ -104,6 +106,8 @@ class Session():
         self.next_msg = None
         # Mutex for questions data
         self.questions_mutex = threading.Lock()
+        # History of commands
+        self.history = []
 
         # Establish connection to Arduino transceiver
         if port is None:
@@ -199,7 +203,7 @@ class Session():
         '''
         Changes the iClicker frequency to attack on.
 
-        :param freqchoice: choice of frequencies in 2 capital letters [A-F]
+        :param freqchoice: choice of frequencies in 2 capital letters [A-D]
         :return:
         '''
         # action code
@@ -329,13 +333,13 @@ class Session():
     def validate_freq(f):
         '''
         Validates that a given frequency
-        is 2 letters of [A-F]
+        is 2 letters of [A-D]
         '''
         if len(f) != 2:
             return False
-        if f[0] < 'A' or f[0] > 'F':
+        if f[0] < 'A' or f[0] > 'D':
             return False
-        if f[1] < 'A' or f[1] > 'F':
+        if f[1] < 'A' or f[1] > 'D':
             return False
         return True
 
