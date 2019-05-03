@@ -9,6 +9,12 @@ for (clicker_button of clicker_buttons) {
     })
 }
 
+let freq_select = document.querySelector('#freq-select');
+freq_select.addEventListener('change', (evt) => {
+    let freq = evt.target.value;
+    changeFrequency(freq)
+})
+
 let ipcRenderer = require('electron').ipcRenderer;
 /**
  * Submits an answer to the python server using zerorpc
@@ -17,4 +23,11 @@ let ipcRenderer = require('electron').ipcRenderer;
 function submitAnswer(answer) {
     let id = window.iclickerId;
     ipcRenderer.send('submit-answer', {id, answer});
+}
+/**
+ * Changes the frequency by doing an IPC call
+ * @param {string} freq - the new frequency
+ */
+function changeFrequency(freq) {
+    ipcRenderer.send('change-frequency', {freq})
 }

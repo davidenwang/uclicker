@@ -188,6 +188,12 @@ body {
     opacity: 1;
 }
 
+#freq-select {
+    max-width: 300px;
+    min-width: 200px;
+    margin-bottom: 20px;
+}
+
 /* .clicker_button.clicked {
     color: #1664c0;
     background-color: #f5dcaa;
