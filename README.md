@@ -11,6 +11,7 @@ The interactive prompt will accept the following commands:
 - ids [LIMIT]: List all iClicker IDs that have sent messages
   - LIMIT: Optional argument, an integer. If given, will only display the LIMIT most recent IDs
 - reset: Clear the stored iClicker messages (e.g. for a new multiple choice question)
+- gen: Generate a random valid iClicker ID
 - send [ID] [CHOICE]: Send an iClicker message with iClicker id ID and multiple choice answer CHOICE
   - ID: String of 8 characters from A-F, 0-9
   - CHOICE: A character from A-E
