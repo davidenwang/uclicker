@@ -19,4 +19,4 @@ The interactive prompt will accept the following commands:
 - quit: Quits the binary and stops listening to iClicker messages (and stops DOSing if active).
 
 ## Acknowledgements
-iSkipper - https://github.com/wizard97/iSkipper/tree/master/emulator/iSkipper
+iSkipper - https://github.com/wizard97/iSkipper/
