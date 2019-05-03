@@ -17,3 +17,6 @@ The interactive prompt will accept the following commands:
 - startdos: Start spamming the base station with iClicker messages
 - stopdos: Stop spamming
 - quit: Quits the binary and stops listening to iClicker messages (and stops DOSing if active).
+
+## Acknowledgements
+iSkipper - https://github.com/wizard97/iSkipper/

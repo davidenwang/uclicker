@@ -11,7 +11,14 @@ import subprocess
 
 
 class DummySerial():
+    '''
+    A mock serial port for testing command line
+    without a transceiver
+    '''
     def write(self, x):
+        '''
+        Prints data written to serial (for debugging)
+        '''
         print(x)
 
 class Question():
@@ -223,12 +230,14 @@ class Session():
         '''
         Starts a DOS attack by spamming iClicker messages.
         '''
+        # Send custom opcode for DOS to Arduino
         self.ser.write('cccccccc'.encode())
 
     def stopdos(self):
         '''
         Halts a DOS attack started earlier.
         '''
+        # Send custom opcode for DOS stop to Arduino
         self.ser.write('dddddddd'.encode())
 
     def send(self, iclicker_id, choice):
@@ -366,6 +375,7 @@ class Session():
         except ValueError:
             return False
 
+        # Check that the last byte is an XOR checksum of the first 3
         if id_bytes[3] != (id_bytes[0] ^ id_bytes[1] ^ id_bytes[2]):
             return False
 
@@ -381,9 +391,11 @@ if __name__ == '__main__':
     session = Session(args.port)
 
     if args.ui:
+        # If using the GUI, launch an RPC server for the Electron code to call
         server = zerorpc.Server(session)
         server.bind('tcp://0.0.0.0:4545')
         server.run()
     else:
+        # If using command line, launch the main listening loop
         session.loop()
 
