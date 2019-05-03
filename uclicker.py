@@ -6,6 +6,7 @@ import argparse
 import random
 import zerorpc
 import struct
+import readline
 
 
 class DummySerial():
@@ -33,11 +34,12 @@ class Question():
         # queue which stores most recent iclicker ids
         self.sender_list = []
 
-    def register_sender(self, (iclicker_id, ans)):
+    def register_sender(self, sender):
         '''
         Takes in an iclicker_id and moves it to top of sender list
         to maintain most recently active iclickers
         '''
+        (iclicker_id, ans) = sender
         # try to remove if present
         try:
             self.sender_list.remove((iclicker_id, ans))
@@ -104,6 +106,8 @@ class Session():
         self.next_msg = None
         # Mutex for questions data
         self.questions_mutex = threading.Lock()
+        # History of commands
+        self.history = []
 
         # Establish connection to Arduino transceiver
         if port is None:
