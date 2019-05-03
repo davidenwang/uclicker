@@ -50,10 +50,18 @@ app.on('activate', function () {
 })
 
 // Connect to Ray's backend python rpc server
+const zerorpc = require("zerorpc");
 
+const client = new zerorpc.Client();
+client.connect("tcp://127.0.0.1:4545");
+
+client.on("error", function(error) {
+  console.error("RPC client error:", error);
+});
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
 ipcMain.on('submit-answer', (event, data) => {
-  console.log(data);
+  let {id, answer} = data
+  client.invoke("send", id, answer)
 })
