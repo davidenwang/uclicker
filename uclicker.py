@@ -7,12 +7,12 @@ import random
 import zerorpc
 import struct
 import readline
+import subprocess
 
 
 class DummySerial():
     def write(self, x):
-        pass
-
+        print(x)
 
 class Question():
     '''
@@ -41,10 +41,11 @@ class Question():
         '''
         (iclicker_id, ans) = sender
         # try to remove if present
-        try:
-            self.sender_list.remove((iclicker_id, ans))
-        except:
-            pass
+        for iclicker in self.sender_list:
+            if iclicker[0] == iclicker_id:
+                self.sender_list.remove(iclicker)
+                break
+    
         # add iclicker id to top of list
         self.sender_list.append((iclicker_id, ans))
 
@@ -55,6 +56,9 @@ class Question():
         '''
         if iclicker_message is not None:
             answer, iclicker_id = iclicker_message
+            # ignore P which is an ack for switching freqs
+            if answer == 'P': 
+                return
             # remove previous answer
             if iclicker_id in self.map_id_answer:
                 prev_answer = self.map_id_answer[iclicker_id]
@@ -371,13 +375,15 @@ class Session():
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-p', '--port')
+    parser.add_argument('--ui', action='store_true')
     args = parser.parse_args()
 
     session = Session(args.port)
 
-    server = zerorpc.Server(session)
-    server.bind('tcp://0.0.0.0:4545')
-    server.run()
-
-    session.loop()
+    if args.ui:
+        server = zerorpc.Server(session)
+        server.bind('tcp://0.0.0.0:4545')
+        server.run()
+    else:
+        session.loop()
 
