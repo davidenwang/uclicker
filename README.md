@@ -3,6 +3,9 @@ CS 460 Security Lab Final Project by Eric Lee (ericdl2), Ray Sun (raysun2), Alle
 
 Emulates an iClicker or many iClickers, and sniffs all iClicker answers sent in the room.
 
+## Video Demo
+https://www.youtube.com/watch?v=sbPyXyl5Cg8
+
 ## Description
 
 We created a single binary that implements the functionality of both a fake iClicker and a fake base station. When the binary is launched, it will provide an interactive prompt. While running, the binary will listen to and save any iClicker messages sent through the air (using an attached Adafruit Feather M0 radio running our Arduino sketch), on a given iClicker frequency.
