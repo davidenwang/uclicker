@@ -26,4 +26,5 @@ The interactive prompt will accept the following commands:
 - quit: Quits the binary and stops listening to iClicker messages (and stops DOSing if active).
 
 ## Acknowledgements
-iSkipper - https://github.com/wizard97/iSkipper/
+- Used the iSkipper repo as a library - https://github.com/wizard97/iSkipper/  
+- Used an Adafruit Feather M0 Radio with RFM69 Packet Radio - https://learn.adafruit.com/adafruit-feather-m0-radio-with-rfm69-packet-radio/overview
