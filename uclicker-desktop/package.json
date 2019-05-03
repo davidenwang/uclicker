@@ -10,7 +10,8 @@
   "author": "dl-eric",
   "license": "MIT",
   "dependencies": {
-    "cleave.js": "^1.4.10"
+    "cleave.js": "^1.4.10",
+    "zerorpc": "^0.9.8"
   },
   "devDependencies": {
     "electron": "^4.1.4"

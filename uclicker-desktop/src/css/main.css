@@ -92,6 +92,18 @@ body {
     padding: 10px;
     color: white;
     background-color: #1664c0;
+    transition: background-color 0.4s ease;
+    user-select: none;
+    cursor: pointer;
+}
+
+.button:hover {
+    background-color: #08448a;
+}
+
+.button:active {
+    background-color:#447ec2;
+    transition: backgound-color 0.1s ease;
 }
 
 .clicker_container {
@@ -145,7 +157,23 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+
+    position: relative;
 }
+
+.clicker_button .fa-check {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    color: white; 
+    font-size: 18px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+/* .unselected {
+    background-color:#6490c4;
+} */
 
 .clicker_button:hover {
     background-color: #08448a;
@@ -153,13 +181,24 @@ body {
 
 .clicker_button:active {
     background-color:#447ec2;
-    transition: background-color 0.1s ease;
+    transition: backgound-color 0.1s ease;
 }
 
-.info_container {
+.clicked > .fa-check {
+    opacity: 1;
 }
 
-.well {
+/* .clicker_button.clicked {
+    color: #1664c0;
+    background-color: #f5dcaa;
+}
+
+.clicker_button.clicked:hover {
+    color: #1664c0;
+    background-color: #f6c868;
+} */
+
+/* .well {
     max-width: 200px;
     height: 150px;
     margin-left: auto;
@@ -172,4 +211,4 @@ body {
     border-radius: 4px;
     box-shadow: inset 0 1px 1px rgba(0,0,0,.05);
     font-size: 32px;
-}
+} */

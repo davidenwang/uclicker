@@ -8,7 +8,7 @@ let mainWindow
 function createWindow () {
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    width: 800,
+    width: 450,
     height: 600,
     webPreferences: {
       nodeIntegration: true
@@ -49,8 +49,11 @@ app.on('activate', function () {
   if (mainWindow === null) createWindow()
 })
 
+// Connect to Ray's backend python rpc server
+
+
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
-ipcMain.on('submit-id', function (event, data) {
-    console.log(data);
+ipcMain.on('submit-answer', (event, data) => {
+  console.log(data);
 })
