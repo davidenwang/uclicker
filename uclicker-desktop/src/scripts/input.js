@@ -18,6 +18,9 @@ function isValidId(iclickerId) {
     return true;
 }
 
+/**
+ * generates a random i clicker id
+ */
 function generateRandomId() {
     let id = "";
     const bytes = []
@@ -40,6 +43,7 @@ generateId.addEventListener('click', () => {
 
 const navigate = require('./imports').navigate;
 const submitButton = document.querySelector('#submitClicker');
+// when submit is clicked, navigate to the next page
 submitButton.addEventListener('click', () => {
     let idVal = document.querySelector('#iclicker-id').value;
     idVal = idVal.replace(/ /g, "");

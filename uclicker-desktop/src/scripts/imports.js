@@ -22,14 +22,6 @@ const loadImports = () => {
         document.querySelector('.content').appendChild(clone);
     }
 
-    // let navigationButtons = document.querySelectorAll('.navigate');
-    // for (let button of navigationButtons) {
-    //     console.log(button);
-    //     console.log(button.dataset.page);
-    //     button.addEventListener('click', (e) => {
-    //         navigate('clicker');
-    //     });
-    // }
     navigate(FIRST_PAGE)
 }
 
